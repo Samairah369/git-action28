@@ -1,0 +1,17 @@
+name: My First Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  firstjob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print a message
+        run: echo "Hello this is my first workflow"
+
+      - name: do this calculations
+        run: expr 10 + 20
+
+      - name: check os info of runner
+        run: cat /etc/os-release
