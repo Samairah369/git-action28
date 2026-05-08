@@ -1,18 +1,23 @@
-name: My First Workflow
+name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ main ]
 
 jobs:
-  firstjob:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Print a message
-        run: echo "Hello this is my first workflow"
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: do this calculations
-        run: expr 10 + 20
+      - name: Build a docker image
+        run: |
+          docker build -t mynewimage:latest .
 
-      - name: check os info of runner
-        run: cat /etc/os-release
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Tag and push the image
+        run: |
+          docker tag mynewimage:latest ${{ secrets.DOCKER_HUB_USERNAME }}/mynewimage:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/mynewimage:latest
